@@ -3,13 +3,14 @@ import cv2
 import pytesseract
 import tweepy
 import time
+import os
+from dotenv import load_dotenv
 
-keyFile = open('twitterKeys.txt', 'r')
-consumer_key = keyFile.readline().rstrip()
-consumer_secret = keyFile.readline().rstrip()
-access_token = keyFile.readline().rstrip()
-access_token_secret = keyFile.readline().rstrip()
-keyFile.close()
+load_dotenv()
+consumer_key = os.getenv("CONSUMER_KEY")
+consumer_secret = os.getenv("CONSUMER_SECRET")
+access_token = os.getenv("ACCESS_TOKEN")
+access_token_secret = os.getenv("ACCESS_TOKEN_SECRET")
 
 # Authenticate to Twitter
 auth = tweepy.OAuthHandler(consumer_key,consumer_secret)
@@ -20,15 +21,23 @@ api = tweepy.API(auth)
 
 lastTweet = ''
 currentScore = ''
-leedsUnited = 'leeds'
+leedsUnited = 'leeds' 
 while True:
-    myScreenshot = pyautogui.screenshot(region=(700, 250, 540, 210))
-    myScreenshot.save(r'C:\Users\Tom\Documents\Twitterbot-python\test.png')
+    myScreenshot = pyautogui.screenshot(region=(700, 253, 240, 190))
+    myScreenshot.save(r'C:\Users\Tom\Documents\Twitterbot-python\area1.png')
 
-    img = cv2.imread('test.png')
+    myScreenshot = pyautogui.screenshot(region=(955, 253, 235, 190))
+    myScreenshot.save(r'C:\Users\Tom\Documents\Twitterbot-python\area2.png')
+
+    img = cv2.imread('area1.png')
     tempScore = pytesseract.image_to_string(img)
+
+
+    img = cv2.imread('area2.png')
+    tempScore += "\n"
+
+    tempScore += pytesseract.image_to_string(img)
  
-    
     if leedsUnited in tempScore.lower():
         print("yes")
         if currentScore != tempScore:
